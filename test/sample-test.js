@@ -1,11 +1,15 @@
 const { expect } = require('chai')
-const { parseEther } = require('ethers/lib/utils')
+const { parseEther, parseUnits } = require('ethers/lib/utils')
 const { ethers } = require('hardhat')
+
+let xtToken = null;
+let sxtToken = null;
+let usdt = null;
 
 describe('Test', function () {
   it('Should return the deployed Supply', async () => {
     const XT = await ethers.getContractFactory('XTtoken')
-    const xtToken = await XT.deploy(parseEther('1000'))
+    xtToken = await XT.deploy(parseEther('1000'))
     await xtToken.deployed()
     console.log('xtToken address has deployed to:', xtToken.address)
 
@@ -14,7 +18,7 @@ describe('Test', function () {
     )
 
     const SXT = await ethers.getContractFactory('sXTtoken')
-    const sxtToken = await SXT.deploy(parseEther('100000000'))
+    sxtToken = await SXT.deploy(parseEther('100000000'))
     await sxtToken.deployed()
     console.log('sXToken address has deployed to', sxtToken.address)
 
@@ -23,20 +27,25 @@ describe('Test', function () {
     )
 
     const USDT = await ethers.getContractFactory('TetherToken')
-    const usdt = await USDT.deploy(parseEther('1000'))
+    usdt = await USDT.deploy(parseUnits('1000', 6))
     await usdt.deployed()
 
     console.log('usdt token address has deployed to', usdt.address)
 
     expect(
-      await usdt.balanceOf(0xd4be38b30fd6b336e4ac48866bbe2dffe66ab8b4),
+      await usdt.balanceOf('0xd4be38b30fd6b336e4ac48866bbe2dffe66ab8b4'),
     ).to.equal('1000000000')
+
+    await xtToken.setSXTAddress(sxtToken.address)
+    console.log('sXT token conatract address: ', await xtToken.getSXTAddress())
+
+    await xtToken.setTestUSDTAddress(usdt.address)
+    console.log('usdt token contract address: ', await xtToken.getTestUSDTAddress())
+
+    await sxtToken.setTestUSDTAddress(usdt.address)
   })
 
   it('set SXT token contract address in XT contract', async () => {
-    await xtToken.setSXTAddress(sxtToken.address)
-    expect(await xtToken.setSXTAddress(sxtToken.address)).to.equal(
-      xtToken.getSXTAddress(),
-    )
+   
   })
 })
