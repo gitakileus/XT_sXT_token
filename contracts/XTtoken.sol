@@ -12,46 +12,50 @@ contract XTtoken is ERC20, Ownable {
   uint256 private sXT_decimals = 18;
   uint256 private usdt_decimals = 6;
 
-  constructor(uint256 initialSupply) ERC20("XTtoken", "XT") {
-    _mint(address(this), initialSupply);
+  constructor(uint256 _initialSupply) ERC20("XTtoken", "XT") {
+    _mint(address(this), _initialSupply);
   }
 
-  function buy(uint256 tokenAmount) public {
+  function buy(uint256 _tokenAmount) public {
 
-    uint256 requiredUSDT = tokenAmount * 10 * 10 ** usdt_decimals / 10 ** XT_decimals;
-    uint256 requiredSXT = tokenAmount * 1000;
+    uint256 requiredUSDT = _tokenAmount * 10 * 10 ** usdt_decimals / 10 ** XT_decimals;
+    uint256 requiredSXT = _tokenAmount * 1000;
 
-    require(balanceOf(address(this)) >= tokenAmount, "contract's token amount should be greater than request amount");
+    require(balanceOf(address(this)) >= _tokenAmount, "contract's token amount should be greater than request amount");
 
     IERC20(usdt_address).transferFrom(msg.sender, address(this), requiredUSDT );
 
-    require(IERC20(sXT_address).balanceOf(address(this)) >= 1000 * tokenAmount, "contract's sXT token amount should be greater than request amount");
+    require(IERC20(sXT_address).balanceOf(address(this)) >= 1000 * _tokenAmount, "contract's sXT token amount should be greater than request amount");
     IERC20(sXT_address).transfer(msg.sender, requiredSXT);
-    transfer(msg.sender, tokenAmount);
+    transfer(msg.sender, _tokenAmount);
   }
 
-  function sale(uint256 tokenAmount) public {
+  function sale(uint256 _tokenAmount) public {
 
-    uint256 requiredUSDT = tokenAmount * 10 * 10 ** usdt_decimals / 10 ** XT_decimals;
+    uint256 requiredUSDT = _tokenAmount * 10 * 10 ** usdt_decimals / 10 ** XT_decimals;
 
-    require(IERC20(usdt_address).balanceOf(address(this)) >= tokenAmount*10, "contract's XT token amount should be greater than request amount");
-    transferFrom(msg.sender, address(0), tokenAmount);
+    require(IERC20(usdt_address).balanceOf(address(this)) >= _tokenAmount*10, "contract's XT token amount should be greater than request amount");
+    transferFrom(msg.sender, address(0), _tokenAmount);
     IERC20(usdt_address).transfer(msg.sender, requiredUSDT);
   }
 
-  function setSXTAddress(address sXTAddress)  public onlyOwner {
-    sXT_address = sXTAddress;
+  function setSXTAddress(address _sXTAddress)  public onlyOwner {
+    sXT_address = _sXTAddress;
   }
 
   function getSXTAddress() public view returns (address) {
     return sXT_address;
   }
 
-  function setTestUSDTAddress(address usdtAddress)  public onlyOwner {
-    usdt_address = usdtAddress;
+  function setTestUSDTAddress(address _usdtAddress)  public onlyOwner {
+    usdt_address = _usdtAddress;
   }
 
   function getTestUSDTAddress()  public view returns (address) {
     return usdt_address;
+  }
+
+  function mint(address _address, uint256 _amount) external onlyOwner {
+    _mint(_address, _amount);
   }
 }
