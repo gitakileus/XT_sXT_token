@@ -18,7 +18,7 @@ describe('Test', function () {
     await sxtToken.deployed()
     console.log('sXToken address has deployed to', sxtToken.address)
 
-    expect(await xtToken.balanceOf(xtToken.address)).to.equal(
+    expect(await sxtToken.balanceOf(sxtToken.address)).to.equal(
       parseEther('100000000'),
     )
 
