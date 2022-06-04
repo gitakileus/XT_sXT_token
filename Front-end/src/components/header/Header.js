@@ -12,7 +12,7 @@ import Web3Modal from 'web3modal'
 
 import {
   XTtokenAddress,
-  SXTtokenAddress,
+  sxtTokenAddress,
   usdtTokenAddress,
 } from '../../contracts'
 
@@ -25,7 +25,7 @@ const Header = () => {
 
   const usdtBigNumAmount = useTokenBalance(usdtTokenAddress, account)
   const xtBigNumAmount = useTokenBalance(XTtokenAddress, account)
-  const sxtBigNumAmount = useTokenBalance(SXTtokenAddress, account)
+  const sxtBigNumAmount = useTokenBalance(sxtTokenAddress, account)
 
   const handleConnect = async () => {
     const providerOptions = {

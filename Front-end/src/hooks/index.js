@@ -12,13 +12,13 @@ import XTtoken from '../abi/XTtoken.json'
 import SXTtoken from '../abi/sXTtoken.json'
 import UsdtToken from '../abi/TetherToken.json'
 
-import { XTtokenAddress, SXTtokenAddress, usdtTokenAddress } from '../contracts'
+import { XTtokenAddress, sxtTokenAddress, usdtTokenAddress } from '../contracts'
 
 const XTtokenInterface = new ethers.utils.Interface(XTtoken.abi)
 const XTtokenContract = new Contract(XTtokenAddress, XTtokenInterface)
 
 const SXTtokenInterface = new ethers.utils.Interface(SXTtoken.abi)
-const SXTtokenContract = new Contract(SXTtokenAddress, SXTtokenInterface)
+const SXTtokenContract = new Contract(sxtTokenAddress, SXTtokenInterface)
 
 const UsdtTokenInterface = new ethers.utils.Interface(UsdtToken.abi)
 const UsdtTokenContract = new Contract(usdtTokenAddress, UsdtTokenInterface)
@@ -64,6 +64,18 @@ export const useBuyXTtoken = () => {
 // Function to sell XT token
 export const useSellXTToken = () => {
   const { state, send } = useContractFunction(XTtokenContract, 'sale')
+  return [state, send]
+}
+
+// Function to swap from usdt to sXT token
+export const useSwapFromUSDT = () => {
+  const { state, send } = useContractFunction(SXTtokenContract, 'swapFromUSDT')
+  return [state, send]
+}
+
+// Function to swap from sXT to usdt
+export const useSwapFromSXT = () => {
+  const { state, send } = useContractFunction(SXTtokenContract, 'swapFromSXT')
   return [state, send]
 }
 
