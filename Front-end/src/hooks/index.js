@@ -10,11 +10,9 @@ import { Contract, ethers } from 'ethers'
 
 import XTtoken from '../abi/XTtoken.json'
 import SXTtoken from '../abi/sXTtoken.json'
-import usdtToken from '../abi/TetherToken.json'
+import UsdtToken from '../abi/TetherToken.json'
 
-const XTtokenAddress = '0xF5046f94684e87C69eB4b1eF8699352DD9441183'
-const SXTtokenAddress = '0x2E38a245C8CcbC8cF4e2810f28d0c65A193557D1'
-const usdtTokenAddress = '0xf3Faedc6319C8bd7fA2C1688e72c9EABb6ba5a57'
+import { XTtokenAddress, SXTtokenAddress, usdtTokenAddress } from '../contracts'
 
 const XTtokenInterface = new ethers.utils.Interface(XTtoken.abi)
 const XTtokenContract = new Contract(XTtokenAddress, XTtokenInterface)
@@ -22,8 +20,8 @@ const XTtokenContract = new Contract(XTtokenAddress, XTtokenInterface)
 const SXTtokenInterface = new ethers.utils.Interface(SXTtoken.abi)
 const SXTtokenContract = new Contract(SXTtokenAddress, SXTtokenInterface)
 
-const usdtTokenInterface = new ethers.utils.Interface(usdtToken.abi)
-const usdtTokenContract = new Contract(usdtTokenInterface, usdtToken)
+const UsdtTokenInterface = new ethers.utils.Interface(UsdtToken.abi)
+const UsdtTokenContract = new Contract(usdtTokenAddress, UsdtTokenInterface)
 
 export const useTokensBalance = (tokenList, account) => {
   return useContractCalls(
@@ -38,20 +36,38 @@ export const useTokensBalance = (tokenList, account) => {
   )
 }
 
-export const useBuy = (XTtokenAmount) => {
-  const { state, send } = useContractFunction(XTtokenContract, 'buy', {
-    transactionName: 'buy',
-  })
+// First Function to get USDT token to buy XT token
+export const useBuyUsdtToken = () => {
+  const { state, send } = useContractFunction(
+    UsdtTokenContract,
+    'transferFrom',
+    {
+      transactionName: 'Buy Usdt Token',
+    },
+  )
+
   return [state, send]
 }
 
-export const useSale = (XTtokenAmount) => {
-  const { state, send } = useContractFunction(XTtokenAmount, 'sale', {
-    transactionName: 'sale',
-  })
+// Second Function to Approve to buy XT token
+export const useUsdtApprove = () => {
+  const { state, send } = useContractFunction(UsdtTokenContract, 'approve')
   return [state, send]
 }
 
+// Third Function to buy XT token
+export const useBuyXTtoken = () => {
+  const { state, send } = useContractFunction(XTtokenContract, 'buy')
+  return [state, send]
+}
+
+// Function to sell XT token
+export const useSellXTToken = () => {
+  const { state, send } = useContractFunction(XTtokenContract, 'sale')
+  return [state, send]
+}
+
+// Function to get amount of XT Token in XT Token Contract
 export const useGetTokenAmount = (address) => {
   const { value, error } =
     useCall(
@@ -70,6 +86,7 @@ export const useGetTokenAmount = (address) => {
   return value?.[0]
 }
 
+// Funtion to get amount of SXT token in XT Token Contract
 export const useGetSXTAddress = () => {
   const { value, error } =
     useCall({
@@ -86,10 +103,11 @@ export const useGetSXTAddress = () => {
   return value?.[0]
 }
 
-export const useGetusdtTokenAddress = () => {
+// Function to get amount of USDT token in XT Token Contract
+export const useGetUSDTAddress = () => {
   const { value, error } =
     useCall({
-      contract: XTtokenContract, // instance of called contract
+      contract: XTtokenContract, // instance of callled contract
       method: 'getTestUSDTAddress', // Method to be called in contract
       args: [],
     }) ?? {}

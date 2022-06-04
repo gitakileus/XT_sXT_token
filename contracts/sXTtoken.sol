@@ -2,10 +2,13 @@
 pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
+import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
 
 contract sXTtoken is ERC20, Ownable {
+  using SafeERC20 for IERC20;
+  
   address private usdt_address = 0xdAC17F958D2ee523a2206206994597C13D831ec7;
 
   uint256 private XT_decimals = 18;

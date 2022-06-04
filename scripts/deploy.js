@@ -8,17 +8,17 @@ async function main() {
 
   console.log('XT token deployed to:', xt.address)
 
-  const sXT = await hre.ethers.getContractFactory('sXTtoken')
-  const sxt = await sXT.deploy(parseEther('100000000'))
+  // const sXT = await hre.ethers.getContractFactory('sXTtoken')
+  // const sxt = await sXT.deploy(parseEther('100000000'))
 
-  await sxt.deployed()
-  console.log('sXT token deployed to:', sxt.address)
+  // await sxt.deployed()
+  // console.log('sXT token deployed to:', sxt.address)
 
-  const USDT = await hre.ethers.getContractFactory('TetherToken')
-  const usdt = await USDT.deploy(parseEther('1000'))
+  // const USDT = await hre.ethers.getContractFactory('TetherToken')
+  // const usdt = await USDT.deploy(parseEther('10000'))
 
-  await usdt.deployed()
-  console.log('usdt token deployed to:', usdt.address)
+  // await usdt.deployed()
+  // console.log('usdt token deployed to:', usdt.address)
 }
 
 main()
